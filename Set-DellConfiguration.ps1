@@ -2,7 +2,7 @@
 
 [CmdletBinding()]
 Param (
-    [Parameter(Position=0, Mandatory=$true)]
+    [Parameter(Position=0, Mandatory=$true, ParameterSetName='Single')]
     [ValidateScript({
         $setOptions = Get-Content "$PSScriptRoot/set-options.txt"
         if ($_ -notin $setOptions) { throw "Invalid option: $_" }
@@ -11,17 +11,23 @@ Param (
     [string]
     $Key,
 
-    [Parameter(Position=1, Mandatory=$true)]
+    [Parameter(Position=1, Mandatory=$true, ParameterSetName='Single')]
     [string]
-    $Value
+    $Value,
+
+    [Parameter(Position=0, Mandatory=$true, ParameterSetName='Multiple')]
+    [hashtable]
+    $Values
 )
 
-$result = & "$PSScriptRoot/bin/cctk.exe" "--$Key=$Value"
-if (-not $?) {
-    throw "Error calling cctk (key = '$Key')."
+if (-not $Values) {
+    $Values = @{"$Key" = $Value}
 }
 
-if ($result -match '(.*)=(.*)') {
-    return $Matches[2]
+$arguments = $Values.GetEnumerator() | ForEach-Object { "--$($_.Name)=$($_.Value)" }
+$result = & "$PSScriptRoot/bin/cctk.exe" $arguments
+if (-not $?) {
+    throw "Error calling cctk (arguments = $arguments)."
 }
-throw "Unexpected result: '$result' (key = '$Key')."
+
+return $result | ConvertFrom-StringData

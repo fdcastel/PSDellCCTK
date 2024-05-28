@@ -1,14 +1,13 @@
 #Requires -RunAsAdministrator
 
-$sataRaidMode = .\Get-DellConfiguration.ps1 -Key 'EmbSataRaid'
-if ($sataRaidMode -ne 'Ahci') {
+$result = .\Get-DellConfiguration.ps1 -Key 'EmbSataRaid'
+if ($result.Values[0] -ne 'Ahci') {
     Write-Warning 'EmbSataRaid is not in "Ahci" mode.'
 } 
 
-.\Set-DellConfiguration.ps1 -Key 'WarningsAndErr' -Value 'ContWrn'
-
-.\Set-DellConfiguration.ps1 -Key 'AcPwrRcvry' -Value 'On'
-
-.\Set-DellConfiguration.ps1 -Key 'WakeOnAc' -Value 'Enabled'
-
-.\Set-DellConfiguration.ps1 -Key 'WakeOnLan' -Value 'LanWlan'
+.\Set-DellConfiguration.ps1 -Values @{
+    WarningsAndErr = 'ContWrn'
+    AcPwrRcvry = 'On'
+    WakeOnAc = 'Enabled'
+    WakeOnLan ='LanWlan'
+}

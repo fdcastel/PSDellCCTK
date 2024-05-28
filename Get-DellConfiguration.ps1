@@ -8,16 +8,14 @@ Param (
         if ($_ -notin $getOptions) { throw "Invalid option: $_" }
         return $True
     })]
-    [string]
+    [string[]]
     $Key
 )
 
-$result = & "$PSScriptRoot/bin/cctk.exe" --$Key
+$arguments = $Key | ForEach-Object { "--$_" }
+$result = & "$PSScriptRoot/bin/cctk.exe" $arguments
 if (-not $?) {
-    throw "Error calling cctk (key = '$Key')."
+    throw "Error calling cctk (arguments = $arguments)."
 }
 
-if ($result -match '(.*)=(.*)') {
-    return $Matches[2]
-}
-throw "Unexpected result: '$result' (key = '$Key')."
+return $result | ConvertFrom-StringData
