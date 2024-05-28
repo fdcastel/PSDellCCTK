@@ -9,3 +9,7 @@ Invoke-RestMethod $url -OutFile $fileName
 Expand-Archive $fileName -DestinationPath $env:TEMP -Force
 
 Set-Location "$env:TEMP\PSDellCCTK-master"
+
+Remove-Item './Rebuild-Options.ps1' > $null
+attrib +R './get-options.txt'
+attrib +R './set-options.txt'
