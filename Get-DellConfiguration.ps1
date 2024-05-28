@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator
+
 [CmdletBinding()]
 Param (
     [Parameter(Position=0, Mandatory=$true)]
