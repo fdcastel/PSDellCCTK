@@ -19,7 +19,7 @@ iex (iwr 'https://raw.githubusercontent.com/fdcastel/PSDellCCTK/master/bootstrap
 
 ## Usage
 
-> **IMPORTANT**: All scripts requires administrative privileges to run.
+> **IMPORTANT**: All scripts require administrative privileges to run.
 
 ### Get-DellConfiguration
 
@@ -27,7 +27,7 @@ iex (iwr 'https://raw.githubusercontent.com/fdcastel/PSDellCCTK/master/bootstrap
 Get-DellConfiguration.ps1 [-Key] <string[]> [<CommonParameters>]
 ```
 
-Returns one or more configuration values in a hash table.
+Returns one or more configuration values in an ordered dictionary.
 
 Example:
 ```powershell
@@ -44,16 +44,22 @@ WarningsAndErr                 ContWrn
 ### Set-DellConfiguration
 
 ```powershell
-Set-DellConfiguration.ps1 [-Key] <string> [-Value] <string> [<CommonParameters>]
-Set-DellConfiguration.ps1 [-Values] <hashtable> [<CommonParameters>]
+Set-DellConfiguration.ps1 [-Key] <string> [-Value] <string> [-SetupPassword <securestring>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Set-DellConfiguration.ps1 [-Values] <IDictionary> [-SetupPassword <securestring>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
-Sets one or more configuration values. Returns a hash table with updated values.
+Sets one or more configuration values. Returns an ordered dictionary with updated values.
+
+Before anything is changed, all keys are checked against the options this computer's BIOS supports (as listed by `bin\cctk.exe -H`, which differs between Dell models). Unsupported or read-only keys are rejected. Get-DellConfiguration rejects unsupported keys too, but can read read-only ones.
+
+Values are applied in the order given. Use `[ordered]@{ ... }` when the order matters (a plain `@{ ... }` hash table has no defined order).
+
+If the BIOS has a setup (admin) password, pass it with `-SetupPassword`. Password values are masked in error and `-WhatIf` messages.
 
 Examples:
 
 ```powershell
-.\Set-DellConfiguration.ps1 -Key 'WakeOnLan' -Value 'LanWLan'
+.\Set-DellConfiguration.ps1 -Key 'WakeOnLan' -Value 'LanWlan'
 
 Name                           Value
 ----                           -----
@@ -61,10 +67,32 @@ WakeOnLan                      LanWlan
 ```
 
 ```powershell
-.\Set-DellConfiguration.ps1 @{ AcPwrRcvry = 'On' ; WakeOnAc = 'Enabled' }
+.\Set-DellConfiguration.ps1 ([ordered]@{ AcPwrRcvry = 'On' ; WakeOnLan = 'LanWlan' })
 
 Name                           Value
 ----                           -----
 AcPwrRcvry                     On
-WakeOnAc                       Enabled
+WakeOnLan                      LanWlan
 ```
+
+```powershell
+.\Set-DellConfiguration.ps1 -Key 'WakeOnLan' -Value 'LanWlan' -SetupPassword (Read-Host -AsSecureString 'BIOS setup password')
+```
+
+```powershell
+.\Set-DellConfiguration.ps1 -Key 'WakeOnLan' -Value 'LanWlan' -WhatIf
+
+What if: Performing the operation "Set --WakeOnLan=LanWlan" on target "BIOS on MYPC".
+```
+
+
+
+### Set-DellUnattendedOptions
+
+```powershell
+Set-DellUnattendedOptions.ps1 [-SetupPassword <securestring>] [-WhatIf] [-Confirm] [<CommonParameters>]
+```
+
+Example preset for machines that must come back on their own after a power loss: warns if `EmbSataRaid` is not `Ahci`, then sets `WarningsAndErr=ContWrn`, `AcPwrRcvry=On`, `WakeOnAc=Enabled` and `WakeOnLan=LanWlan`.
+
+`AcPwrRcvry` and `WakeOnAc` are the same feature (turn the system on when AC power is restored) under different names on different Dell models. Settings this computer's BIOS doesn't support are skipped with a warning.

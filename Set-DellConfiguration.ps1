@@ -1,13 +1,8 @@
 #Requires -RunAsAdministrator
 
-[CmdletBinding()]
+[CmdletBinding(SupportsShouldProcess=$true)]
 Param (
     [Parameter(Position=0, Mandatory=$true, ParameterSetName='Single')]
-    [ValidateScript({
-        $setOptions = Get-Content "$PSScriptRoot/set-options.txt"
-        if ($_ -notin $setOptions) { throw "Invalid option: $_" }
-        return $True
-    })]
     [string]
     $Key,
 
@@ -16,18 +11,39 @@ Param (
     $Value,
 
     [Parameter(Position=0, Mandatory=$true, ParameterSetName='Multiple')]
-    [hashtable]
-    $Values
+    [System.Collections.IDictionary]
+    $Values,
+
+    [SecureString]
+    $SetupPassword
 )
 
+. "$PSScriptRoot/CctkHelpers.ps1"
+
 if (-not $Values) {
-    $Values = @{"$Key" = $Value}
+    $Values = [ordered]@{"$Key" = $Value}
 }
 
-$arguments = $Values.GetEnumerator() | ForEach-Object { "--$($_.Name)=$($_.Value)" }
-$result = & "$PSScriptRoot/bin/cctk.exe" $arguments
-if (-not $?) {
-    throw "Error calling cctk (arguments = $arguments)."
+Assert-CctkOption -Key @($Values.Keys) -Kind set
+
+if ($SetupPassword -and ($Values.Keys -contains 'ValSetupPwd')) {
+    throw 'Use either -SetupPassword or the ValSetupPwd key, not both.'
 }
 
-return $result | ConvertFrom-StringData
+$arguments = @($Values.GetEnumerator() | ForEach-Object { "--$($_.Key)=$($_.Value)" })
+
+if (-not $PSCmdlet.ShouldProcess("BIOS on $env:COMPUTERNAME", "Set $(Hide-CctkSecret $arguments)")) {
+    return
+}
+
+if ($SetupPassword) {
+    # cctk requires the BIOS setup password to be the first argument.
+    $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SetupPassword)
+    try {
+        $arguments = @("--ValSetupPwd=$([Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr))") + $arguments
+    } finally {
+        [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
+    }
+}
+
+return Invoke-Cctk $arguments
