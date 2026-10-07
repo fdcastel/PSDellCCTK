@@ -1,0 +1,63 @@
+
+Dell Command Configure Version 4.11.1  48 (Windows - Jan 19 2024, 04:58:17)
+Copyright 2009 - 2024 Dell Inc. All rights reserved.
+
+Usage: cctk --option[=argument]
+
+For more information about a particular command, 
+use the option '-H' followed by the command name.
+Example: cctk -H --Asset
+
+Note: Commands with * Symbol are Read-Only BIOS Features.
+
+    --ABIProvState                  --FirmwareTamperDet             --SecureBoot
+    --ABIState                      --FirstPowerOnDate*             --SecureBootMode
+    --Absolute                      --ForcePxeNextBoot              --SedBlockSidAuthentication
+    --AcPwrRcvry                    FotaProfile                     --Serr
+    --ActiveECoresSelect            --FullScreenLogo                --SetupPwd
+    --AdminSetupLockout             -H or --help                    --SleepMode
+    --AdvancedMode                  --HddInfo*                      --SmartErrors
+    Advsm                           --HddPwd                        --SmmSecurityMitigation
+    --AllowBiosDowngrade            HttpBootProfile                 --SpeedShift
+    --Asset                         --HttpsBoot                     --Speedstep
+    --AutoOSRecoveryThreshold       --HttpsBootMode                 --StrongPassword
+    --AutoOn                        -I or --infile                  --SupportAssistOSRecovery
+    --AutoOnHr                      --IntegratedAudio               --SvcTag*
+    --AutoOnMn                      --IntelTME                      --SysId*
+    --AutoRtcRecovery               --InternalDmaCompatibility      --SysName*
+    --BIOSConnect                   --InternalSpeaker               --SysPwd
+    --BiosAutoRcvr                  --KernelDma                     --SysRev*
+    --BiosCharacteristics*          -L or --logfile                 --TelemetryAccessLvl
+    --BiosCurLang*                  --LastBiosUpdate*               --ThermalManagement
+    --BiosListInstallLang*          --LogicProc                     --TpmClear*
+    --BiosLogClear                  --LogoType                      --TpmPpiClearOverride
+    --BiosRcvrFrmHdd                --M2PcieSsd0                    --TpmSecurity
+    --BiosRomSize*                  --M2PcieSsd1                    --TrustExecution
+    --BiosVer*                      --MSUefiCA                      --TurboMode
+    --BlockBootUntilChasIntrusionClr--MasterPasswordLockout         --UefiBootPathSecurity
+    --BlockSleep                    --Mem*                          --UefiNwStack
+    --BluetoothDevice               --MfgDate*                      --UsbEmu
+    BootOrder                       --Microphone                    --UsbEmuNoUsbBoot
+    --BootTimeVideo                 --MinSizeOfContigMem*           --UsbPortsFront
+    --CStatesCtrl                   --MultiDisplay                  --UsbPortsFront1
+    --CapsuleFirmwareUpdate         --NonAdminPsidRevert            --UsbPortsFront2
+    --ChasIntrusion                 --NumLockLed                    --UsbPortsRear
+    --ChassisIntruStatus            -O or --outfile                 --UsbPortsRear1
+    --ChassisIntrusionStatus        --OsWatchdogTimer               --UsbPortsRear2
+    CloudAppProfile                 --OvrWrt*                       --UsbPortsRear3
+    --CompletionCode*               --PasswordBypass                --UsbPortsRear30
+    ConnectionProfile               PasswordConfiguration           --UsbPortsRear4
+    --CpuCoreSelect                 --PasswordLock                  --UsbWake
+    --CpuCount*                     --PcieResizableBar              --Uuid*
+    --CpuSpeed*                     --PowerLogClear                 --ValSetupPwd
+    CsosProfile                     --PowerWarn                     --ValSysPwd
+    --DeepSleepCtrl                 --PpiBypassSedBlockSidCommand   --Version*
+    --DeviceHotkeyAccess            --PreBootDma                    --VerticalIntegration
+    --DockWarningsEnMsg             --PropOwnTag                    --Virtualization
+    --DustFilter                    --PxeBootPriority               --VtForDirectIo
+    --EmbNic1                       --ReportLogoType*               --WakeOnDock
+    --EmbSataRaid                   --RestoreBIOSSettings           --WakeOnLan
+    --ExtIPv4PXEBootTimeout         --RptKeyErr                     --WarningsAndErr
+    --ExtPostTime                   -S or search                    --WdtOsBootProtection
+    --FOTA                          --SafeAuthEnforce               --WirelessLan
+    --FanCtrlOvrd                   --SaveConfig                    

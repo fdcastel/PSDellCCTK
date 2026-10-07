@@ -1,0 +1,9 @@
+HDD Information in the current system.
+----------------------------------------
+Index            : 0
+SSD Name         : NVMe SSD-SN:     S5GXNX0X000000X
+Present          : Yes
+Pwd-Protected    : No
+Pending-Restart  : No
+Admin-only-change: No
+----------------------------------------

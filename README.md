@@ -147,6 +147,19 @@ Settings this computer's BIOS doesn't support are skipped with a warning. On mos
 
 
 
+## Tests
+
+The tests need neither administrative privileges nor a Dell computer. They run the scripts against a stand-in for `cctk.exe` that replays output recorded on a Dell OptiPlex (see `tests/fixtures`).
+
+They require [Pester](https://pester.dev) 6, on Windows PowerShell 5.1 or PowerShell 7:
+
+```powershell
+Install-Module Pester -Scope CurrentUser -SkipPublisherCheck    # Once. -SkipPublisherCheck is needed because Windows ships an old, differently signed Pester 3.4.
+Invoke-Pester ./tests
+```
+
+
+
 ## Third-party software
 
 The files in `bin/` are Dell Command | Configure, which is Dell's software and is subject to Dell's license terms.
